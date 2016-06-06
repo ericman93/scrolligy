@@ -21,7 +21,7 @@ angular.module('scrolligy', [])
                 });
 
                 $scope.$on('$locationChangeSuccess', function (event) {
-                    $scope.currentStep = $location.search()['step'];
+                    $scope.currentStep = Number($location.search()['step']);
                 })
 
                 $scope.next = function () {
