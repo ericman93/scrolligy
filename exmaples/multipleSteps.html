@@ -8,7 +8,6 @@
 <body ng-app='scollify-example'>
     test:
     <scrolligy></scrolligy>
-    {{$root.steps}}
 </body>
 </html>
 
@@ -18,8 +17,7 @@
         .run(['$rootScope', function ($rootScope) {
             $rootScope.steps = [
                 {
-                    templateUrl: 'url',
-                    data: [1,2,3]
+                    templateUrl: '/stpes/statics-stpe.html'
                 }
             ]
         }]);
