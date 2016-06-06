@@ -1,0 +1,32 @@
+﻿$current-step-color: rbga(255, 255, 255, 0.3);
+$fade-step-color: rbga(0, 0, 0, 1);
+
+.scrolligy{
+    height: 100%;
+    overflow: hidden;
+
+    .step{
+        &.current-step{
+            height: 60%;
+            background-color: $current-step-color;
+        }
+
+        &.fade-step{
+            height: 20%;
+
+            .fade{
+                float: left;
+                background-color: $fade-step-color;
+                z-index: 2;
+                position: absolute;
+                height: 80%;
+                width: 80%;
+            }
+
+            scrolligy-step{
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}
