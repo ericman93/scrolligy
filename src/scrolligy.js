@@ -1,7 +1,7 @@
 angular.module('scrolligy', [])
     .directive('scrolligy', [function () {
         return {
-            templateUrl: function(elem, attrs) {
+            templateUrl: function (elem, attrs) {
                 return attrs.templateUrl || '..//src//scrolligy.html';
             },
             restrict: 'EA',
@@ -12,62 +12,64 @@ angular.module('scrolligy', [])
                 onRegisterApi: '=',
                 globalData: '='
             },
-            controller: ['$scope', '$location', '$animate', function($scope, $location, $animate){
-                $scope.currentStep = $scope.currentStep || 0;
-                $location.search('step', $scope.currentStep);
+            controller: ['$scope', '$location', '$animate',
+                function ($scope, $location, $animate) {
+                    $scope.next = function () {
+                        if ($scope.currentStep < $scope.steps.length - 1) {
+                            $scope.currentStep++;
+                        }
+                    };
 
-                $scope.$watch('currentStep', function (newVal) {
-                    $location.search('step', newVal);
-                });
+                    $scope.previous = function () {
+                        if ($scope.currentStep > 0) {
+                            $scope.currentStep--;
+                        }
+                    };
 
-                $scope.$on('$locationChangeSuccess', function (event) {
-                    $scope.currentStep = $location.search()['step'];
-                })
+                    $scope.addStep = function (step, index) {
+                        step.index = index || $scope.currentStep;
 
-                $scope.next = function () {
-                    if($scope.currentStep < $scope.steps.length - 1) {
-                        $scope.currentStep++;
-                    }
-                };
+                        incrementIndexOfFollowingSteps(step.index);
 
-                $scope.previous = function () {
-                    if($scope.currentStep > 0) {
-                        $scope.currentStep--;
-                    }
-                };
+                        $scope.steps.splice(step.index, 0, step);
+                        sortStepsByIndex();
+                    };
 
-                $scope.addStep = function (step, index) {
-                    step.index = index || $scope.currentStep;
+                    $scope.events = {
+                        next: $scope.next,
+                        addStep: $scope.addStep
+                    };
 
-                    incrementIndexOfFollowingSteps(step.index);
+                    $location.search('step', $scope.currentStep);
 
-                    $scope.steps.splice(step.index, 0, step);
-                    sortStepsByIndex();
-                };
-
-                $scope.events = {
-                    next: $scope.next,
-                    addStep: $scope.addStep
-                };
-
-                function incrementIndexOfFollowingSteps(stepIndex) {
-                    after = $scope.steps.filter(function (step) { return step.index >= stepIndex })
-                    angular.forEach(after, function (step) {
-                        step.index++; 
-                    })
-                }
-
-                function sortStepsByIndex() {
-                    $scope.steps.sort(function (a, b) {
-                        return a.index - b.index;
+                    $scope.$watch('currentStep', function (newVal) {
+                        $location.search('step', newVal);
                     });
-                }
 
-                function init() {
-                    sortStepsByIndex();
-                }
+                    $scope.$on('$locationChangeSuccess', function (event) {
+                        $scope.currentStep = $location.search()['step'];
+                    })
 
-                init();
-            }]
+                    function incrementIndexOfFollowingSteps(stepIndex) {
+                        after = $scope.steps.filter(function (step) { return step.index >= stepIndex })
+                        angular.forEach(after, function (step) {
+                            step.index++;
+                        })
+                    }
+
+                    function sortStepsByIndex() {
+                        $scope.steps.sort(function (a, b) {
+                            return a.index - b.index;
+                        });
+                    }
+
+                    function init() {
+                        $scope.currentStep = $scope.currentStep || 0;
+
+                        sortStepsByIndex();
+                    }
+
+                    init();
+                }]
         };
     }]);
