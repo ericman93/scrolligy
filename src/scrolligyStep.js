@@ -4,9 +4,7 @@
 angular.module('scrolligy')
     .directive('scrolligyStep', [function () {
         return {
-            templateUrl: function(elem, attrs) {
-                return attrs.templateUrl || 'defaultStep.html';
-            },
+            template: '<div ng-include="templateUrl"></div>',
             scope: {
                 templateUrl: '=',
                 globalData: '=',
@@ -27,7 +25,7 @@ angular.module('scrolligy')
                 $scope.addStep = function (url, data) {
                     raiseEvent('addStep', url, data);
                 };
-                
+
                 function raiseEvent(name) {
                     callback = $scope.events[name];
                     if(callback) {
