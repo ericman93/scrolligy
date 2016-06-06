@@ -9,7 +9,8 @@ angular.module('scrolligy', [])
             scope: {
                 steps: '=',
                 currentStep: '=',
-                onRegisterApi: '='
+                onRegisterApi: '=',
+                globalData: '='
             },
             controller: ['$scope', '$animate', function($scope, $animate){
                 $scope.currentStep = $scope.currentStep || 0;

@@ -7,7 +7,8 @@ angular.module('scrolligy')
             template: '<div ng-include="templateUrl"></div>',
             scope: {
                 templateUrl: '=',
-                data: '=stepData',
+                globalData: '=',
+                data: '=',
                 events: '='
             },
             replace: true,
