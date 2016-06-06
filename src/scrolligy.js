@@ -12,8 +12,11 @@ angular.module('scrolligy', [])
                 onRegisterApi: '=',
                 globalData: '='
             },
-            controller: ['$scope', '$location', '$animate',
-                function ($scope, $location, $animate) {
+            controller: ['$scope', '$location', '$animate', '$q',
+                function ($scope, $location, $animate, $q) {
+                    var isRedirectedFromValidation = false;
+                    var goToIndex = 0;
+
                     $scope.next = function () {
                         if ($scope.currentStep < $scope.steps.length - 1) {
                             $scope.currentStep++;
@@ -42,8 +45,15 @@ angular.module('scrolligy', [])
 
                     $location.search('step', $scope.currentStep);
 
-                    $scope.$watch('currentStep', function (newVal) {
-                        $location.search('step', newVal);
+                    $scope.$watch('currentStep', function (newVal, oldVal) {
+                        if ((newVal != oldVal != 0) && !isRedirectedFromValidation) {
+                            preventStateChangeUntilValidation(oldVal);
+                            goToIndex = newVal;
+                        }
+                        else {
+                            isRedirectedFromValidation = false;
+                            $location.search('step', newVal);
+                        }
                     });
 
                     $scope.$on('$locationChangeSuccess', function (event) {
@@ -57,9 +67,37 @@ angular.module('scrolligy', [])
                         })
                     }
 
+                    function preventStateChangeUntilValidation(stepIndex) {
+                        $q.when(isValidStep(stepIndex)).then(function (data) {
+                            console.log(data)
+                            if (data == true) {
+                                isRedirectedFromValidation = false;
+                                $scope.currentStep = goToIndex;
+                            }
+                            else {
+                                alert('invalid')
+                            }
+                        });
+
+                        isRedirectedFromValidation = true;
+                        $scope.currentStep = stepIndex;
+                    }
+
                     function sortStepsByIndex() {
                         $scope.steps.sort(function (a, b) {
                             return a.index - b.index;
+                        });
+                    }
+
+                    function isValidStep(index) {
+                        if ($scope.steps[index].isValid == undefined) {
+                            return true;
+                        }
+
+                        return $q.when($scope.steps[index].isValid()).then(function (value) {
+                            return value == undefined ? true : value;
+                        }, function () {
+                            return false;
                         });
                     }
 

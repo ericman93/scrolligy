@@ -14,7 +14,9 @@
         <button ng-click="step=step+1">Next</button>
         <button ng-click="step=step-1">Prvious</button>
         <ul>
-            <li ng-repeat="step in steps | orderBy: 'index' track by $index">{{step.index}} - {{step.templateUrl}}</li>
+            <li ng-repeat="s in steps | orderBy: 'index' track by s.index">
+                <button nclick="alert(s.index)">{{s.index}}</button> - {{s.templateUrl}}
+            </li>
         </ul>
     </div>
 </body>
@@ -23,7 +25,7 @@
 <script>
     angular
         .module('scollify-example', ['scrolligy'])
-        .run(['$rootScope', function ($rootScope) {
+        .run(['$rootScope', '$q', function ($rootScope, $q) {
             $rootScope.gloablData = {
                 name: 'Harry Potter'
             };
@@ -31,16 +33,35 @@
             $rootScope.steps = [
                 {
                     templateUrl: './steps/static-step.html',
-                    index: 0
+                    index: 0,
+                    isValid: function () {
+                        return true;
+                    }
                 },
                 {
                     templateUrl: './steps/add-step.html',
-                    index: 1
+                    index: 1,
+                    isValid: function(){
+                        var deffer = $q.defer();
+                        deffer.resolve();
+
+                        return deffer.promise;
+                    }
                 },
                 {
                     templateUrl: './steps/data-step.html',
                     data: [1, 1, 2, 3, 5, 8, 13],
-                    index: 2
+                    index: 2,
+                    isValid: function () {
+                        var deffer = $q.defer();
+                        deffer.reject();
+
+                        return deffer.promise;
+                    }
+                },
+                {
+                    templateUrl: './steps/global-data.html',
+                    index: 3    
                 }
             ]
         }]);
