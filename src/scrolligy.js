@@ -12,8 +12,17 @@ angular.module('scrolligy', [])
                 onRegisterApi: '=',
                 globalData: '='
             },
-            controller: ['$scope', '$animate', function($scope, $animate){
+            controller: ['$scope', '$location', '$animate', function($scope, $location, $animate){
                 $scope.currentStep = $scope.currentStep || 0;
+                $location.search('currentStep', $scope.currentStep);
+
+                $scope.$watch('currentStep', function (newVal) {
+                    $location.search('currentStep', newVal);
+                });
+
+                $scope.$on('$locationChangeSuccess', function (event) {
+                    $scope.currentStep = $location.search()['currentStep'];
+                })
 
                 $scope.next = function () {
                     if($scope.currentStep < $scope.steps.length - 1) {
