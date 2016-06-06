@@ -30,7 +30,7 @@ angular.module('scrolligy', [])
                 $scope.addStep = function (step, index) {
                     step.index = index || $scope.currentStep;
 
-                    incrementIndexOfFollowingSteps(step);
+                    incrementIndexOfFollowingSteps(step.index);
 
                     $scope.steps.splice(step.index, 0, step);
                 };
