@@ -14,14 +14,14 @@ angular.module('scrolligy', [])
             },
             controller: ['$scope', '$location', '$animate', function($scope, $location, $animate){
                 $scope.currentStep = $scope.currentStep || 0;
-                $location.search('currentStep', $scope.currentStep);
+                $location.search('step', $scope.currentStep);
 
                 $scope.$watch('currentStep', function (newVal) {
-                    $location.search('currentStep', newVal);
+                    $location.search('step', newVal);
                 });
 
                 $scope.$on('$locationChangeSuccess', function (event) {
-                    $scope.currentStep = $location.search()['currentStep'];
+                    $scope.currentStep = $location.search()['step'];
                 })
 
                 $scope.next = function () {
