@@ -2,12 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title></title>
-    <script src="../node_modules/angular/angular.min.js"></script>
+    <link rel="stylesheet" href="../src/scrolligy.css" type="text/css">
+
+    <script src="../node_modules/angular/angular.js"></script>
     <script src="../src/scrolligy.js"></script>
+    <script src="../src/scrolligyStep.js"></script>
 </head>
 <body ng-app='scollify-example'>
-    test:
-    <scrolligy></scrolligy>
+    <scrolligy current-step="step" steps="steps" global-data="gloablData"></scrolligy>
+    <ul>
+        <li ng-repeat="step in steps | orderBy: 'index' track by $index">{{step.index}} - {{step.templateUrl}}</li>
+    </ul>
 </body>
 </html>
 
@@ -15,11 +20,41 @@
     angular
         .module('scollify-example', ['scrolligy'])
         .run(['$rootScope', function ($rootScope) {
+            $rootScope.gloablData = {
+                name: 'Harry Potter'
+            };
+
             $rootScope.steps = [
                 {
-                    templateUrl: '/stpes/statics-stpe.html'
+                    templateUrl: './steps/static-step.html',
+                    index: 0
+                },
+                {
+                    templateUrl: './steps/add-step.html',
+                    index: 1
+                },
+                {
+                    templateUrl: './steps/data-step.html',
+                    data: [1, 1, 2, 3, 5, 8, 13],
+                    index: 2
                 }
             ]
         }]);
-    
 </script>
+<style>
+    html,
+    body{
+        height: 100%;
+    }
+
+    .scrolligy{
+        float: right;
+        width: 85%;
+        height: 100%
+    }
+
+    ul{
+        float: left;
+        width: 10%;
+    }
+</style>

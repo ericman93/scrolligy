@@ -36,19 +36,25 @@ angular.module('scrolligy', [])
                     }
                 };
 
-                $scope.addStep = function (args) {
-                    console.log($scope.currentStep);
-                    $scope.steps.splice($scope.currentStep-1,0, {
-                        templateUrl: args[0],
-                        icon: args[1],
-                        data: args[2]
-                    });
+                $scope.addStep = function (step, index) {
+                    step.index = index || $scope.currentStep;
+
+                    incrementIndexOfFollowingSteps(step.index);
+
+                    $scope.steps.splice(step.index, 0, step);
                 };
 
                 $scope.events = {
                     next: $scope.next,
                     addStep: $scope.addStep
                 };
+
+                function incrementIndexOfFollowingSteps(stepIndex) {
+                    after = $scope.steps.filter(function (step) { return step.index >= stepIndex })
+                    angular.forEach(after, function (step) {
+                        step.index++; 
+                    })
+                }
 
             }]
         };

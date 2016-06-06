@@ -22,14 +22,14 @@ angular.module('scrolligy')
                     raiseEvent('previous');
                 };
                 
-                $scope.addStep = function (url, data) {
-                    raiseEvent('addStep', url, data);
+                $scope.addStep = function (step, index) {
+                    raiseEvent('addStep', step, index);
                 };
 
                 function raiseEvent(name) {
                     callback = $scope.events[name];
                     if(callback) {
-                        callback([].slice.call(arguments, 1));
+                        callback.apply(null, Array.prototype.slice.call(arguments, 1));
                     }
                 }
             }]

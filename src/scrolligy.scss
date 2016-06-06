@@ -2,7 +2,6 @@
 $fade-step-color: rgba(0, 0, 0, 0.5);
 
 .scrolligy{
-    height: 100%;
     overflow: hidden;
 
     .step{
@@ -18,9 +17,11 @@ $fade-step-color: rgba(0, 0, 0, 0.5);
                 float: left;
                 background-color: $fade-step-color;
                 z-index: 2;
-                position: absolute;
-                height: 80%;
-                width: 80%;
+                    /*
+                position: relative;
+                height: 100%;
+                width: 100%;
+                    */
             }
 
             scrolligy-step{
