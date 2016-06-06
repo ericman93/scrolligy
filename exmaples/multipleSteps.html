@@ -8,9 +8,20 @@
 <body ng-app='scollify-example'>
     test:
     <scrolligy></scrolligy>
+    {{$root.steps}}
 </body>
 </html>
 
 <script>
-    angular.module('scollify-example', ['scrolligy'])
+    angular
+        .module('scollify-example', ['scrolligy'])
+        .run(['$rootScope', function ($rootScope) {
+            $rootScope.steps = [
+                {
+                    templateUrl: 'url',
+                    data: [1,2,3]
+                }
+            ]
+        }]);
+    
 </script>
