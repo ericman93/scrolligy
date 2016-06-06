@@ -42,6 +42,7 @@ angular.module('scrolligy', [])
                     incrementIndexOfFollowingSteps(step.index);
 
                     $scope.steps.splice(step.index, 0, step);
+                    sortStepsByIndex();
                 };
 
                 $scope.events = {
@@ -56,6 +57,17 @@ angular.module('scrolligy', [])
                     })
                 }
 
+                function sortStepsByIndex() {
+                    $scope.steps.sort(function (a, b) {
+                        return a.index - b.index;
+                    });
+                }
+
+                function init() {
+                    sortStepsByIndex();
+                }
+
+                init();
             }]
         };
     }]);
