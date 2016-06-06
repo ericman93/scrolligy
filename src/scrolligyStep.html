@@ -1,0 +1,9 @@
+<ul ng-if="data">
+    <li ng-repeat="element in data track by $index">{{element}}</li>
+</ul>
+
+<div>
+    <button ng-click="nextStep()">Next step</button>
+    <br />
+    <button ng-click="prevStep()">Previous step</button>
+</div>
