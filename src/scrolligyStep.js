@@ -9,7 +9,8 @@ angular.module('scrolligy')
             },
             scope: {
                 templateUrl: '=',
-                data: '=stepData',
+                globalData: '=',
+                data: '=
                 events: '='
             },
             replace: true,
