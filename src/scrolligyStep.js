@@ -24,7 +24,7 @@ angular.module('scrolligy')
                 $scope.addStep = function (url, data) {
                     raiseEvent('addStep', url, data);
                 };
-                
+
                 function raiseEvent(name) {
                     callback = $scope.events[name];
                     if(callback) {
