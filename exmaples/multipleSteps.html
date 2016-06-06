@@ -3,8 +3,14 @@
 <head>
     <title></title>
     <script src="../node_modules/angular/angular.min.js"></script>
+    <script src="../src/scrolligy.js"></script>
 </head>
-<body ng-app>
-    {{1+2}}
+<body ng-app='scollify-example'>
+    test:
+    <scrolligy></scrolligy>
 </body>
 </html>
+
+<script>
+    angular.module('scollify-example', ['scrolligy'])
+</script>
