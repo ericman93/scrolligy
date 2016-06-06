@@ -32,6 +32,14 @@ angular.module('scrolligy')
                         callback.apply(null, Array.prototype.slice.call(arguments, 1));
                     }
                 }
+
+                function init() {
+                    if($scope.templateUrl === undefined) {
+                        $scope.templateUrl = "/src/scrolligyStep.html";
+                    }
+                }
+                
+                init();
             }]
         };
     }]);

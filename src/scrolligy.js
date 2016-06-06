@@ -1,8 +1,10 @@
+angular.module('scrolligy', ['templates-dist']);
+
 angular.module('scrolligy', [])
     .directive('scrolligy', [function () {
         return {
             templateUrl: function(elem, attrs) {
-                return attrs.templateUrl || '..//src//scrolligy.html';
+                return attrs.template || "../src/scrolligy.html";
             },
             restrict: 'EA',
             replace: true,
@@ -21,8 +23,31 @@ angular.module('scrolligy', [])
                 });
 
                 $scope.$on('$locationChangeSuccess', function (event) {
-                    $scope.currentStep = Number($location.search()['step']);
-                })
+                    var searchParams = $location.search();
+                    var newStepNum = Number(searchParams.step);
+
+                    ////////////////////////////////
+                    //check for invalid step numbers
+                    ////////////////////////////////
+
+                    //non-number
+                    if(isNaN(newStepNum)) {
+                        newStepNum = 0;
+                    }
+
+                    //smaller than 0
+                    if(newStepNum < 0) {
+                        newStepNum = $scope.currentStep;
+                    }
+
+                    //larger than last step
+                    if(newStepNum > $scope.steps.length - 1) {
+                        newStepNum = $scope.currentStep;
+                    }
+
+                    $scope.currentStep = newStepNum;
+                    $location.search('step', newStepNum);
+                });
 
                 $scope.next = function () {
                     if($scope.currentStep < $scope.steps.length - 1) {
@@ -51,10 +76,12 @@ angular.module('scrolligy', [])
                 };
 
                 function incrementIndexOfFollowingSteps(stepIndex) {
-                    after = $scope.steps.filter(function (step) { return step.index >= stepIndex })
+                    var after = $scope.steps.filter(function (step) {
+                        return step.index >= stepIndex;
+                    });
                     angular.forEach(after, function (step) {
                         step.index++; 
-                    })
+                    });
                 }
 
                 function sortStepsByIndex() {
