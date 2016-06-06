@@ -12,8 +12,8 @@ angular.module('scrolligy', [])
                 onRegisterApi: '=',
                 globalData: '='
             },
-            controller: ['$scope', '$location', '$animate', '$q',
-                function ($scope, $location, $animate, $q) {
+            controller: ['$scope', '$attrs', '$location', '$animate', '$q', 'Scrolligy',
+                function ($scope, $attrs, $location, $animate, $q, Scrolligy) {
                     var isRedirectedFromValidation = false;
                     var goToIndex = 0;
 
@@ -83,12 +83,6 @@ angular.module('scrolligy', [])
                         $scope.currentStep = stepIndex;
                     }
 
-                    function sortStepsByIndex() {
-                        $scope.steps.sort(function (a, b) {
-                            return a.index - b.index;
-                        });
-                    }
-
                     function isValidStep(index) {
                         if ($scope.steps[index].isValid == undefined) {
                             return true;
@@ -101,10 +95,22 @@ angular.module('scrolligy', [])
                         });
                     }
 
+                    function sortStepsByIndex() {
+                        $scope.steps.sort(function (a, b) {
+                            return a.index - b.index;
+                        });
+                    }
+
                     function init() {
                         $scope.currentStep = $scope.currentStep || 0;
 
                         sortStepsByIndex();
+
+                        Scrolligy.register($attrs.id, {
+                            next: $scope.next,
+                            previous: $scope.previous,
+                            addStep: $scope.addStep
+                        })
                     }
 
                     init();
