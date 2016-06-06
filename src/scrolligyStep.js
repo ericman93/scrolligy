@@ -30,10 +30,10 @@ angular.module('scrolligy')
                 function raiseEvent(name) {
                     callback = $scope.events[name];
                     if(callback) {
-                        callback([].slice.call(arguments, 1))
+                        callback([].slice.call(arguments, 1));
                     }
                 }
             }]
-        }
+        };
     }]);
 
