@@ -1,6 +1,27 @@
-angular.module('scrolligy', ['templates-dist']);
+angular.module('scrolligy', ['templates-dist']);angular.module('scrolligy')
+    .service('Scrolligy', [function () {
+        var scrolligies = {};
 
-angular.module('scrolligy', [])
+        function register(name, scrolligy) {
+            scrolligies[name] = scrolligy;
+        }
+
+        function unregister(name) {
+            delete scrolligies[name];
+        }
+
+        function get(name) {
+            return scrolligies[name];
+        }
+
+        return {
+            register: register,
+            unregister: unregister,
+            get: get
+        };
+    }
+]);;
+angular.module('scrolligy')
     .directive('scrolligy', [function () {
         return {
             templateUrl: function(elem, attrs) {
@@ -14,12 +35,23 @@ angular.module('scrolligy', [])
                 onRegisterApi: '=',
                 globalData: '='
             },
-            controller: ['$scope', '$location', '$animate', function($scope, $location, $animate){
+            controller: ['$scope', '$attrs', '$location', '$animate', '$q', 'Scrolligy',
+                        function ($scope, $attrs, $location, $animate, $q, Scrolligy) {
+                
+                var isRedirectedFromValidation = false;
+                var goToIndex = 0;
                 $scope.currentStep = $scope.currentStep || 0;
                 $location.search('step', $scope.currentStep);
 
-                $scope.$watch('currentStep', function (newVal) {
-                    $location.search('step', newVal);
+                $scope.$watch('currentStep', function (newVal, oldVal) {
+                    if ((newVal != oldVal !== 0) && !isRedirectedFromValidation) {
+                        preventStateChangeUntilValidation(oldVal);
+                        goToIndex = newVal;
+                    }
+                    else {
+                        isRedirectedFromValidation = false;
+                        $location.search('step', newVal);
+                    }
                 });
 
                 $scope.$on('$locationChangeSuccess', function (event) {
@@ -50,13 +82,13 @@ angular.module('scrolligy', [])
                 });
 
                 $scope.next = function () {
-                    if($scope.currentStep < $scope.steps.length - 1) {
+                    if ($scope.currentStep < $scope.steps.length - 1) {
                         $scope.currentStep++;
                     }
                 };
 
                 $scope.previous = function () {
-                    if($scope.currentStep > 0) {
+                    if ($scope.currentStep > 0) {
                         $scope.currentStep--;
                     }
                 };
@@ -84,6 +116,34 @@ angular.module('scrolligy', [])
                     });
                 }
 
+                function preventStateChangeUntilValidation(stepIndex) {
+                    $q.when(isValidStep(stepIndex)).then(function (data) {
+                        console.log(data);
+                        if (data === true) {
+                            isRedirectedFromValidation = false;
+                            $scope.currentStep = goToIndex;
+                        }
+                        else {
+                            alert('invalid');
+                        }
+                    });
+
+                    isRedirectedFromValidation = true;
+                    $scope.currentStep = stepIndex;
+                }
+
+                function isValidStep(index) {
+                    if ($scope.steps[index].isValid === undefined) {
+                        return true;
+                    }
+
+                    return $q.when($scope.steps[index].isValid()).then(function (value) {
+                        return value === undefined ? true : value;
+                    }, function () {
+                        return false;
+                    });
+                }
+
                 function sortStepsByIndex() {
                     $scope.steps.sort(function (a, b) {
                         return a.index - b.index;
@@ -91,13 +151,23 @@ angular.module('scrolligy', [])
                 }
 
                 function init() {
+                    $scope.currentStep = $scope.currentStep || 0;
+
                     sortStepsByIndex();
+
+                    Scrolligy.register($attrs.id, {
+                        next: $scope.next,
+                        previous: $scope.previous,
+                        addStep: $scope.addStep
+                    });
                 }
 
                 init();
             }]
         };
-    }]);;/**
+    }]);
+;
+/**
  * Created by Aryeh on 06/06/2016.
  */
 angular.module('scrolligy')
@@ -143,7 +213,8 @@ angular.module('scrolligy')
         };
     }]);
 
-;angular.module('templates-dist', ['scrolligy.html', 'scrolligyStep.html']);
+;
+angular.module('templates-dist', ['scrolligy.html', 'scrolligyStep.html']);
 
 angular.module("scrolligy.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("scrolligy.html",

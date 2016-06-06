@@ -46,7 +46,8 @@ module.exports = function(grunt) {
 
         concat: {
             options: {
-                separator: ';'
+                separator: ';\n',
+                banner: 'angular.module(\'scrolligy\', [\'templates-dist\']);'
             },
             dist: {
                 src: [ 'src/*.js', 'tmp/*.js' ],
