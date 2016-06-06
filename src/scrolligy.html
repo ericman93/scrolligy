@@ -2,7 +2,7 @@
     <div ng-if="currentStep > 0" class="step previous-step fade-step">
         <div class="fade"></div> 
         <scrolligy-step events="events" 
-                        template-url="step[currentStep-1].templateUrl"
+                        template-url="steps[currentStep-1].templateUrl"
                         step-data="steps[currentStep-1].data">
         </scrolligy-step>
     </div>
@@ -10,7 +10,7 @@
     <div class="step current-step">
         <div class="fade"></div>
         <scrolligy-step events="events"
-                        template-url="step[currentStep].templateUrl"
+                        template-url="steps[currentStep].templateUrl"
                         step-data="steps[currentStep].data">
         </scrolligy-step>
     </div>
@@ -18,7 +18,7 @@
     <div ng-if="currentStep > steps.legnth-1" class="step next-step fade-step">
         <div class="fade"></div>
         <scrolligy-step events="events" 
-                        template-url="step[currentStep+1].templateUrl"
+                        template-url="steps[currentStep+1].templateUrl"
                         step-data="steps[currentStep+1].data">
         </scrolligy-step>
     </div>

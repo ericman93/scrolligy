@@ -2,7 +2,7 @@ angular.module('scrolligy', [])
     .directive('scrolligy', [function () {
         return {
             templateUrl: function(elem, attrs) {
-                return attrs.templateUrl || 'scrolligy.html';
+                return attrs.templateUrl || '..//src//scrolligy.html';
             },
             restrict: 'EA',
             replace: true,

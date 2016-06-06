@@ -4,9 +4,7 @@
 angular.module('scrolligy')
     .directive('scrolligyStep', [function () {
         return {
-            templateUrl: function(elem, attrs) {
-                return attrs.templateUrl || 'defaultStep.html';
-            },
+            template: '<div ng-include="templateUrl"></div>',
             scope: {
                 templateUrl: '=',
                 data: '=stepData',
