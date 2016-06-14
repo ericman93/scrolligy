@@ -13,7 +13,7 @@
     <scrolligy current-step="step" steps="steps" global-data="gloablData" id="myStep"></scrolligy>
     <div id="nav">
         <button ng-click="$root.next()">Next</button>
-        <button ng-click="step=step-1">Prvious</button>
+        <button ng-click="$root.prev()">Prvious</button>
         <ul>
             <li ng-repeat="s in steps | orderBy: 'index' track by s.index">
                 <button nclick="alert(s.index)">{{s.index}}</button> - {{s.templateUrl}}
@@ -33,6 +33,10 @@
 
             $rootScope.next = function () {
                 Scrolligy.get('myStep').next();
+            }
+
+            $rootScope.prev = function () {
+                Scrolligy.get('myStep').previous();
             }
 
             $rootScope.steps = [
