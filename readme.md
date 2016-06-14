@@ -13,6 +13,7 @@ controller object or as a named controller from the current module
 - Statefulness: the currently displayed step is reflected in the url
 - Multiple scrolligys per page: the directive can be added multiple times per
  page, while providing a unique name to each
+
 ## Usage
 To use a scrolligy, add a `<scrolligy>` element in the desired place in your
  page. Configuring the scrolligy instance is done as followes:
