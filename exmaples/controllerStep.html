@@ -27,7 +27,7 @@
     angular
         .module('scollify-example', ['scrolligy'])
         .controller('TestCtrl', function ($scope) {
-            alert('testt')
+            $scope.server = 'DBDB';
         })
         .run(['$rootScope', '$q', 'Scrolligy', function ($rootScope, $q, Scrolligy) {
             $rootScope.gloablData = {
@@ -64,7 +64,7 @@
                 {
                     templateUrl: './steps/add-step.html',
                     index: 1,
-                    //controller: TestCtrl
+                    controller: 'TestCtrl'
                 }
             ]
         }]);

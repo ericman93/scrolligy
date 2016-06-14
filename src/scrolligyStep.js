@@ -1,6 +1,3 @@
-/**
- * Created by Aryeh on 06/06/2016.
- */
 angular.module('scrolligy')
     .directive('scrolligyStep', [function () {
         return {
@@ -14,17 +11,17 @@ angular.module('scrolligy')
             },
             //replace: true,
             restrict: 'EA',
-            controller: ['$scope', 'Scrolligy', function ($scope, Scrolligy) {
+            controller: ['$scope', '$controller', 'Scrolligy', function ($scope, $controller, Scrolligy) {
                 var scrolligy;
 
-                $scope.nextStep = function() {
+                $scope.nextStep = function () {
                     scrolligy.next();
                 };
 
-                $scope.prevStep = function() {
+                $scope.prevStep = function () {
                     scrolligy.previous();
                 };
-                
+
                 $scope.addStep = function (step, index) {
                     scrolligy.addStep(step, index);
                 };
@@ -35,8 +32,12 @@ angular.module('scrolligy')
 
                 function init() {
                     scrolligy = Scrolligy.get($scope.scrolligyName);
+
+                    if ($scope.controller) {
+                        $scope.controller = $controller($scope.controller, { $scope: $scope.$new() }).constructor
+                    }
                 }
-                
+
                 init();
             }]
         };

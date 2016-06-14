@@ -2,6 +2,7 @@
     <div ng-if="currentStep > 0" class="step previous-step fade-step">
         <div class="fade"></div>
         <scrolligy-step scrolligy="name"
+                        ]controller="steps[currentStep-1].controller"
                         template-url="steps[currentStep-1].templateUrl"
                         step-data="steps[currentStep-1].data"
                         global-data="globalData">
