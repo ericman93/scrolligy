@@ -4,39 +4,32 @@
 angular.module('scrolligy')
     .directive('scrolligyStep', [function () {
         return {
-            template: '<div ng-include="templateUrl"></div>',
+            template: '<div ng-include="templateUrl || \'scrolligyStep.html\'"></div>',
             scope: {
                 templateUrl: '=',
                 globalData: '=',
                 data: '=stepData',
-                events: '='
+                scrolligyName: '=scrolligy'
             },
             replace: true,
             restrict: 'EA',
-            controller: ['$scope', function($scope) {
+            controller: ['$scope', 'Scrolligy', function ($scope, Scrolligy) {
+                var scrolligy;
+
                 $scope.nextStep = function() {
-                    raiseEvent('next');
+                    scrolligy.next();
                 };
 
                 $scope.prevStep = function() {
-                    raiseEvent('previous');
+                    scrolligy.previous();
                 };
                 
                 $scope.addStep = function (step, index) {
-                    raiseEvent('addStep', step, index);
+                    scrolligy.addStep(step, index);
                 };
 
-                function raiseEvent(name) {
-                    callback = $scope.events[name];
-                    if(callback) {
-                        callback.apply(null, Array.prototype.slice.call(arguments, 1));
-                    }
-                }
-
                 function init() {
-                    if($scope.templateUrl === undefined) {
-                        $scope.templateUrl = "/src/scrolligyStep.html";
-                    }
+                    scrolligy = Scrolligy.get($scope.scrolligyName);
                 }
                 
                 init();

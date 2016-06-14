@@ -1,145 +1,131 @@
-angular.module('scrolligy')
+angular.module('scrolligy', [])
     .directive('scrolligy', [function () {
         return {
-            templateUrl: function(elem, attrs) {
-                return attrs.template || "../src/scrolligy.html";
+            templateUrl: function (elem, attrs) {
+                return attrs.templateUrl || '..//src//scrolligy.html';
             },
-            restrict: 'EA',
+            restrict: 'E',
             replace: true,
             scope: {
                 steps: '=',
-                currentStep: '=',
-                onRegisterApi: '=',
                 globalData: '='
             },
             controller: ['$scope', '$attrs', '$location', '$animate', '$q', 'Scrolligy',
-                        function ($scope, $attrs, $location, $animate, $q, Scrolligy) {
-                
-                var isRedirectedFromValidation = false;
-                var goToIndex = 0;
-                $scope.currentStep = $scope.currentStep || 0;
-                $location.search('step', $scope.currentStep);
+                function ($scope, $attrs, $location, $animate, $q, Scrolligy) {
+                    $scope.next = function () {
+                        if ($scope.currentStep < $scope.steps.length - 1) {
+                            goToStep($scope.currentStep + 1);
+                        }
+                    };
 
-                $scope.$watch('currentStep', function (newVal, oldVal) {
-                    if ((newVal != oldVal !== 0) && !isRedirectedFromValidation) {
-                        preventStateChangeUntilValidation(oldVal);
-                        goToIndex = newVal;
-                    }
-                    else {
-                        isRedirectedFromValidation = false;
+                    $scope.previous = function () {
+                        if ($scope.currentStep > 0) {
+                            goToStep($scope.currentStep - 1);
+                        }
+                    };
+
+                    $scope.addStep = function (step, index) {
+                        step.index = index || $scope.currentStep;
+
+                        incrementIndexOfFollowingSteps(step.index);
+
+                        $scope.steps.splice(step.index, 0, step);
+                        sortStepsByIndex();
+                    };
+
+                    $scope.$watch('currentStep', function (newVal, oldVal) {
                         $location.search('step', newVal);
-                    }
-                });
-
-                $scope.$on('$locationChangeSuccess', function (event) {
-                    var searchParams = $location.search();
-                    var newStepNum = Number(searchParams.step);
-
-                    ////////////////////////////////
-                    //check for invalid step numbers
-                    ////////////////////////////////
-
-                    //non-number
-                    if(isNaN(newStepNum)) {
-                        newStepNum = 0;
-                    }
-
-                    //smaller than 0
-                    if(newStepNum < 0) {
-                        newStepNum = $scope.currentStep;
-                    }
-
-                    //larger than last step
-                    if(newStepNum > $scope.steps.length - 1) {
-                        newStepNum = $scope.currentStep;
-                    }
-
-                    $scope.currentStep = newStepNum;
-                    $location.search('step', newStepNum);
-                });
-
-                $scope.next = function () {
-                    if ($scope.currentStep < $scope.steps.length - 1) {
-                        $scope.currentStep++;
-                    }
-                };
-
-                $scope.previous = function () {
-                    if ($scope.currentStep > 0) {
-                        $scope.currentStep--;
-                    }
-                };
-
-                $scope.addStep = function (step, index) {
-                    step.index = index || $scope.currentStep;
-
-                    incrementIndexOfFollowingSteps(step.index);
-
-                    $scope.steps.splice(step.index, 0, step);
-                    sortStepsByIndex();
-                };
-
-                $scope.events = {
-                    next: $scope.next,
-                    addStep: $scope.addStep
-                };
-
-                function incrementIndexOfFollowingSteps(stepIndex) {
-                    var after = $scope.steps.filter(function (step) {
-                        return step.index >= stepIndex;
                     });
-                    angular.forEach(after, function (step) {
-                        step.index++; 
-                    });
-                }
 
-                function preventStateChangeUntilValidation(stepIndex) {
-                    $q.when(isValidStep(stepIndex)).then(function (data) {
-                        console.log(data);
-                        if (data === true) {
-                            isRedirectedFromValidation = false;
-                            $scope.currentStep = goToIndex;
+                    $scope.$on('$locationChangeSuccess', function (event) {
+                        var searchParams = $location.search();
+                        var newStepNum = Number(searchParams.step);
+
+                        ////////////////////////////////
+                        //check for invalid step numbers
+                        ////////////////////////////////
+
+                        //non-number
+                        if (isNaN(newStepNum)) {
+                            newStepNum = 0;
                         }
-                        else {
-                            alert('invalid');
+
+                        //smaller than 0
+                        if (newStepNum < 0) {
+                            newStepNum = $scope.currentStep;
                         }
-                    });
 
-                    isRedirectedFromValidation = true;
-                    $scope.currentStep = stepIndex;
-                }
+                        //larger than last step
+                        if (newStepNum > $scope.steps.length - 1) {
+                            newStepNum = $scope.currentStep;
+                        }
 
-                function isValidStep(index) {
-                    if ($scope.steps[index].isValid === undefined) {
-                        return true;
+                        goToStep(newStepNum);
+                        $location.search('step', newStepNum);
+                    })
+
+                    function incrementIndexOfFollowingSteps(stepIndex) {
+                        after = $scope.steps.filter(function (step) { return step.index >= stepIndex })
+                        angular.forEach(after, function (step) {
+                            step.index++;
+                        })
                     }
 
-                    return $q.when($scope.steps[index].isValid()).then(function (value) {
-                        return value === undefined ? true : value;
-                    }, function () {
-                        return false;
-                    });
-                }
+                    function isValidStep(index) {
+                        if ($scope.steps[index].isValid == undefined) {
+                            return true;
+                        }
 
-                function sortStepsByIndex() {
-                    $scope.steps.sort(function (a, b) {
-                        return a.index - b.index;
-                    });
-                }
+                        return $q.when($scope.steps[index].isValid()).then(function (value) {
+                            return value == undefined ? true : value;
+                        }, function () {
+                            return false;
+                        });
+                    }
 
-                function init() {
-                    $scope.currentStep = $scope.currentStep || 0;
+                    function sortStepsByIndex() {
+                        $scope.steps.sort(function (a, b) {
+                            return a.index - b.index;
+                        });
+                    }
 
-                    sortStepsByIndex();
+                    function invalidStep() {
+                        alert('invalid');
+                        $scope.step[$scope.currentStep].invalid = ture;
+                    }
 
-                    Scrolligy.register($attrs.id, {
-                        next: $scope.next,
-                        previous: $scope.previous,
-                        addStep: $scope.addStep
-                    });
-                }
+                    function goToStep(stepIndex) {
+                        $q.when(isValidStep($scope.currentStep)).then(function (data) {
+                            if (data == true) {
+                                $scope.steps[$scope.currentStep].invalid = false;
+                                $scope.currentStep = stepIndex;
+                            }
+                            else {
+                                invalidStep();
+                            }
+                        }, function () {
+                            invalidStep()
+                        });
+                    }
 
-                init();
-            }]
+                    function init() {
+                        $scope.name = $attrs.id;
+                        $scope.currentStep = 0;
+                        sortStepsByIndex();
+                        $location.search('step', $scope.currentStep);
+
+                        Scrolligy.register($attrs.id, {
+                            next: $scope.next,
+                            previous: $scope.previous,
+                            addStep: $scope.addStep,
+                            getCurrentStep: function () {
+                                return $scope.currentStep;
+                            },
+                            goToStep: goToStep
+                        })
+                    }
+
+                    init();
+                }]
         };
     }]);
