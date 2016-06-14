@@ -28,6 +28,10 @@ angular.module('scrolligy')
                     scrolligy.addStep(step, index);
                 };
 
+                $scope.removeStep = function (index) {
+                    scrolligy.removeStep(index);
+                }
+
                 function init() {
                     scrolligy = Scrolligy.get($scope.scrolligyName);
                 }

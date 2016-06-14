@@ -55,10 +55,10 @@ angular.module('scrolligy', [])
                         $location.search('step', newStepNum);
                     })
 
-                    function incrementIndexOfFollowingSteps(stepIndex) {
+                    function changeIndexOfFollowingSteps(stepIndex, offset) {
                         after = $scope.steps.filter(function (step) { return step.index >= stepIndex })
                         angular.forEach(after, function (step) {
-                            step.index++;
+                            step.index += offset;
                         })
                     }
 
@@ -102,10 +102,17 @@ angular.module('scrolligy', [])
                     function addStep(step, index) {
                         step.index = index || $scope.currentStep;
 
-                        incrementIndexOfFollowingSteps(step.index);
+                        changeIndexOfFollowingSteps(step.index, 1);
 
                         $scope.steps.splice(step.index, 0, step);
                         sortStepsByIndex();
+                    }
+
+                    function removeStep(index) {
+                        changeIndexOfFollowingSteps(index, -1);
+                        $scope.steps.splice(index, 1);
+
+                        $scope.currentStep--;
                     }
 
                     function init() {
@@ -118,6 +125,7 @@ angular.module('scrolligy', [])
                             next: next,
                             previous: previous,
                             addStep: addStep,
+                            removeStep: removeStep,
                             getCurrentStep: function () {
                                 return $scope.currentStep;
                             },
