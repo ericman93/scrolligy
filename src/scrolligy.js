@@ -126,6 +126,7 @@ angular.module('scrolligy', [])
                             previous: previous,
                             addStep: addStep,
                             removeStep: removeStep,
+                            globalData: $scope.globalData,
                             getCurrentStep: function () {
                                 return $scope.currentStep;
                             },

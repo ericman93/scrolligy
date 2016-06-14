@@ -1,8 +1,10 @@
 ﻿angular.module('scrolligy')
-    .service('Scrolligy', [function () {
+    .constant('DefaultScrolligy', 'default-scrolligy')
+    .service('Scrolligy', ['DefaultScrolligy', function (DefaultScrolligy) {
         var scrolligies = {};
 
         function register(name, scrolligy) {
+            name = name || DefaultScrolligy;
             scrolligies[name] = scrolligy;
         }
 
@@ -11,7 +13,8 @@
         }
 
         function get(name) {
-            return scrolligies[name];
+            var scrolligy = name in scrolligies ? name : DefaultScrolligy;
+            return scrolligies[scrolligy];
         }
 
         return {
@@ -20,4 +23,4 @@
             get: get
         };
     }
-]);
+    ]);

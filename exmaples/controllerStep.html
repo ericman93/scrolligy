@@ -10,7 +10,7 @@
     <script src="../src/scolligyService.js"></script>
 </head>
 <body ng-app='scollify-example'>
-    <scrolligy current-step="step" steps="steps" global-data="gloablData" id="myStep"></scrolligy>
+    <scrolligy current-step="step" steps="steps" global-data="gloablData" id="yo-man"></scrolligy>
     <div id="nav">
         <button ng-click="$root.next()">Next</button>
         <button ng-click="$root.prev()">Prvious</button>
@@ -26,23 +26,45 @@
 <script>
     angular
         .module('scollify-example', ['scrolligy'])
+        .controller('TestCtrl', function ($scope) {
+            alert('testt')
+        })
         .run(['$rootScope', '$q', 'Scrolligy', function ($rootScope, $q, Scrolligy) {
             $rootScope.gloablData = {
                 name: 'Harry Potter'
             };
 
             $rootScope.next = function () {
-                Scrolligy.get('myStep').next();
+                Scrolligy.get('yo-man').next();
             }
 
             $rootScope.prev = function () {
-                Scrolligy.get('myStep').previous();
+                Scrolligy.get('yo-man').previous();
             }
 
             $rootScope.steps = [
                 {
-                    templateUrl: './steps/static-step.html',
-                    index: 0
+                    templateUrl: './steps/controller.html',
+                    index: 0,
+                    data: {a: 2},
+                    controller: ['$scope', 'Scrolligy',
+                        function ($scope, Scrolligy) {
+                            var scrolligy;
+                            $scope.name = 'Eric';
+
+                            $scope.print = function () {
+                                console.log(scrolligy.globalData);
+                            }
+
+                            $scope.setScrolligy = function (scrolligyName, data) {
+                                scrolligy = Scrolligy.get(scrolligyName);
+                            }
+                        }]
+                },
+                {
+                    templateUrl: './steps/add-step.html',
+                    index: 1,
+                    //controller: TestCtrl
                 }
             ]
         }]);

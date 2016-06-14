@@ -4,14 +4,15 @@
 angular.module('scrolligy')
     .directive('scrolligyStep', [function () {
         return {
-            template: '<div ng-include="templateUrl || \'scrolligyStep.html\'"></div>',
+            templateUrl: '..//src//scrolligyStep.html',
             scope: {
                 templateUrl: '=',
                 globalData: '=',
+                controller: '=',
                 data: '=stepData',
                 scrolligyName: '=scrolligy'
             },
-            replace: true,
+            //replace: true,
             restrict: 'EA',
             controller: ['$scope', 'Scrolligy', function ($scope, Scrolligy) {
                 var scrolligy;

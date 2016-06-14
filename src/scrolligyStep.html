@@ -1,9 +1,5 @@
-<ul ng-if="data">
-    <li ng-repeat="element in data track by $index">{{element}}</li>
-</ul>
-
-<div>
-    <button ng-click="nextStep()">Next step</button>
-    <br />
-    <button ng-click="prevStep()">Previous step</button>
+﻿<div ng-if="controller" ng-controller="controller" ng-init="setScrolligy(scrolligyName, data)">
+    <div ng-include="templateUrl || 'scrolligyDefaultStep.html'">
+    </div>
 </div>
+<div ng-if="!controller" ng-include="templateUrl || 'scrolligyDefaultStep.html'">
