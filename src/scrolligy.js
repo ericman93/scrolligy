@@ -8,7 +8,7 @@ angular.module('scrolligy', [])
             replace: true,
             scope: {
                 steps: '=',
-                globalData: '='
+                options: '='
             },
             controller: ['$scope', '$attrs', '$location', '$animate', '$q', 'Scrolligy',
                 function ($scope, $attrs, $location, $animate, $q, Scrolligy) {
@@ -25,35 +25,39 @@ angular.module('scrolligy', [])
                     };
 
                     $scope.$watch('currentStep', function (newVal, oldVal) {
-                        $location.search('step', newVal);
+                        if ($scope.options.stateful == true) {
+                            $location.search('step', newVal);
+                        }
                     });
 
-                    $scope.$on('$locationChangeSuccess', function (event) {
-                        var searchParams = $location.search();
-                        var newStepNum = Number(searchParams.step);
+                    if ($scope.options.stateful == true) {
+                        $scope.$on('$locationChangeSuccess', function (event) {
+                            var searchParams = $location.search();
+                            var newStepNum = Number(searchParams.step);
 
-                        ////////////////////////////////
-                        //check for invalid step numbers
-                        ////////////////////////////////
+                            ////////////////////////////////
+                            //check for invalid step numbers
+                            ////////////////////////////////
 
-                        //non-number
-                        if (isNaN(newStepNum)) {
-                            newStepNum = 0;
-                        }
+                            //non-number
+                            if (isNaN(newStepNum)) {
+                                newStepNum = 0;
+                            }
 
-                        //smaller than 0
-                        if (newStepNum < 0) {
-                            newStepNum = $scope.currentStep;
-                        }
+                            //smaller than 0
+                            if (newStepNum < 0) {
+                                newStepNum = $scope.currentStep;
+                            }
 
-                        //larger than last step
-                        if (newStepNum > $scope.steps.length - 1) {
-                            newStepNum = $scope.currentStep;
-                        }
+                            //larger than last step
+                            if (newStepNum > $scope.steps.length - 1) {
+                                newStepNum = $scope.currentStep;
+                            }
 
-                        goToStep(newStepNum);
-                        $location.search('step', newStepNum);
-                    })
+                            goToStep(newStepNum);
+                            $location.search('step', newStepNum);
+                        })
+                    }
 
                     function changeIndexOfFollowingSteps(stepIndex, offset) {
                         after = $scope.steps.filter(function (step) { return step.index >= stepIndex })
@@ -119,14 +123,21 @@ angular.module('scrolligy', [])
                         $scope.name = $attrs.id;
                         $scope.currentStep = 0;
                         sortStepsByIndex();
-                        $location.search('step', $scope.currentStep);
+
+                        $scope.options = angular.merge({
+                            stateful: true
+                        }, $scope.options)
+
+                        if ($scope.options.stateful == true) {
+                            $location.search('step', $scope.currentStep);
+                        }
 
                         Scrolligy.register($attrs.id, {
                             next: next,
                             previous: previous,
                             addStep: addStep,
                             removeStep: removeStep,
-                            globalData: $scope.globalData,
+                            globalData: $scope.options.globalData,
                             getCurrentStep: function () {
                                 return $scope.currentStep;
                             },

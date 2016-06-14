@@ -10,7 +10,7 @@
     <script src="../src/scolligyService.js"></script>
 </head>
 <body ng-app='scollify-example'>
-    <scrolligy current-step="step" steps="steps" global-data="gloablData" id="yo-man"></scrolligy>
+    <scrolligy steps="steps" options="$root.options" id="yo-man"></scrolligy>
     <div id="nav">
         <button ng-click="$root.next()">Next</button>
         <button ng-click="$root.prev()">Prvious</button>
@@ -27,11 +27,14 @@
     angular
         .module('scollify-example', ['scrolligy'])
         .controller('TestCtrl', function ($scope) {
-            alert('testt')
+            $scope.server = 'DBDB';
         })
         .run(['$rootScope', '$q', 'Scrolligy', function ($rootScope, $q, Scrolligy) {
-            $rootScope.gloablData = {
-                name: 'Harry Potter'
+            $rootScope.options = {
+                globalData: {
+                    name: 'Harry Potter'
+                },
+                stateful: false
             };
 
             $rootScope.next = function () {
@@ -64,7 +67,7 @@
                 {
                     templateUrl: './steps/add-step.html',
                     index: 1,
-                    //controller: TestCtrl
+                    controller: 'TestCtrl'
                 }
             ]
         }]);
