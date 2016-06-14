@@ -25,12 +25,12 @@ angular.module('scrolligy', [])
                     };
 
                     $scope.$watch('currentStep', function (newVal, oldVal) {
-                        if ($scope.options.statefull == true) {
+                        if ($scope.options.stateful == true) {
                             $location.search('step', newVal);
                         }
                     });
 
-                    if ($scope.options.statefull == true) {
+                    if ($scope.options.stateful == true) {
                         $scope.$on('$locationChangeSuccess', function (event) {
                             var searchParams = $location.search();
                             var newStepNum = Number(searchParams.step);
@@ -125,10 +125,10 @@ angular.module('scrolligy', [])
                         sortStepsByIndex();
 
                         $scope.options = angular.merge({
-                            statefull: true
+                            stateful: true
                         }, $scope.options)
 
-                        if ($scope.options.statefull == true) {
+                        if ($scope.options.stateful == true) {
                             $location.search('step', $scope.currentStep);
                         }
 
