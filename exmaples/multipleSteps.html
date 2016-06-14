@@ -11,7 +11,7 @@
 
 </head>
 <body ng-app='scollify-example'>
-    <scrolligy current-step="step" steps="steps" global-data="gloablData" id="myStep"></scrolligy>
+    <scrolligy steps="steps" options="options" id="myStep"></scrolligy>
     <div id="nav">
         <button ng-click="$root.next()">Next</button>
         <button ng-click="$root.prev()">Prvious</button>
@@ -28,8 +28,10 @@
     angular
         .module('scollify-example', ['scrolligy'])
         .run(['$rootScope', '$q', 'Scrolligy', function ($rootScope, $q, Scrolligy) {
-            $rootScope.gloablData = {
-                name: 'Harry Potter'
+            $rootScope.options = {
+                globalData: {
+                    name: 'Harry Potter'
+                }
             };
 
             $rootScope.next = function () {
