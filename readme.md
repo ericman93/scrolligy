@@ -24,9 +24,9 @@ To use a scrolligy, add a `<scrolligy>` element in the desired place in your
 ```
 
 ####Details:
-- `steps` - Should reference an array of steps on your scope. The structure
+- `steps` - an array of steps on your scope. The structure
 of each step is explained later on.
-- `options` - Should reference an object with two fields:
+- `options` - an object with two fields:
   1. `globalData` - any data that should be available in the scope of all of
   the steps
   2. `stateful` - a boolean value, if `true` current step is reflected in the
