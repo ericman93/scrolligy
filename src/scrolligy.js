@@ -12,25 +12,16 @@ angular.module('scrolligy', [])
             },
             controller: ['$scope', '$attrs', '$location', '$animate', '$q', 'Scrolligy',
                 function ($scope, $attrs, $location, $animate, $q, Scrolligy) {
-                    $scope.next = function () {
+                    function next() {
                         if ($scope.currentStep < $scope.steps.length - 1) {
                             goToStep($scope.currentStep + 1);
                         }
                     };
 
-                    $scope.previous = function () {
+                    function previous() {
                         if ($scope.currentStep > 0) {
                             goToStep($scope.currentStep - 1);
                         }
-                    };
-
-                    $scope.addStep = function (step, index) {
-                        step.index = index || $scope.currentStep;
-
-                        incrementIndexOfFollowingSteps(step.index);
-
-                        $scope.steps.splice(step.index, 0, step);
-                        sortStepsByIndex();
                     };
 
                     $scope.$watch('currentStep', function (newVal, oldVal) {
@@ -91,7 +82,7 @@ angular.module('scrolligy', [])
 
                     function invalidStep() {
                         alert('invalid');
-                        $scope.step[$scope.currentStep].invalid = ture;
+                        $scope.steps[$scope.currentStep].invalid = true;
                     }
 
                     function goToStep(stepIndex) {
@@ -108,6 +99,15 @@ angular.module('scrolligy', [])
                         });
                     }
 
+                    function addStep(step, index) {
+                        step.index = index || $scope.currentStep;
+
+                        incrementIndexOfFollowingSteps(step.index);
+
+                        $scope.steps.splice(step.index, 0, step);
+                        sortStepsByIndex();
+                    }
+
                     function init() {
                         $scope.name = $attrs.id;
                         $scope.currentStep = 0;
@@ -115,9 +115,9 @@ angular.module('scrolligy', [])
                         $location.search('step', $scope.currentStep);
 
                         Scrolligy.register($attrs.id, {
-                            next: $scope.next,
-                            previous: $scope.previous,
-                            addStep: $scope.addStep,
+                            next: next,
+                            previous: previous,
+                            addStep: addStep,
                             getCurrentStep: function () {
                                 return $scope.currentStep;
                             },
